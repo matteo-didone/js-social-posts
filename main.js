@@ -1,7 +1,3 @@
-// BONUS
-// Handle the absence of a profile image with a fallback element that contains the user's initials (e.g., Luca Formicola > LF).
-// When clicking on a "Like" button of a post, if we have already clicked, we should decrement the counter and change the color of the button.
-
 // Milestone 1 
 
 // Create an array of literal objects containing the posts that we will display in the feed using JS
@@ -60,6 +56,17 @@ const posts = [
         },
         "likes": 95,
         "created": "2021-03-05"
+    }, 
+    {
+        "id": 6,
+        "content": "Placeat libero ipsa nobis ipsum quibusdam quas harum ut. Distinctio minima iusto. Ad ad maiores et sint voluptate recusandae architecto. Et nihil ullam aut alias.",
+        "media": "https://unsplash.it/600/400?image=190",
+        "author": {
+            "name": "Matteo Didonè",
+            "image": ""
+        },
+        "likes": 19,
+        "created": "2001-07-19"
     }
 ];
 
@@ -98,11 +105,76 @@ posts.forEach((post) => {
     const profilePicImg = document.createElement('img');
     // I give the class "profile-pic" to the img element
     profilePicImg.classList.add('profile-pic');
-    // I'm setting the profile picture image to the post author image
-    // I check: 
-    // - If post.author.image === true (such as a string) --> post.author.image will be assigned to profilePicImg.src
-    // - If post.author.image === false (such as null or undefined) --> 'fallback-image-url' will be assigned to profilePicImg.src 
-    profilePicImg.src = post.author.image ? post.author.image : 'fallback-image-url';
+
+    // Function to get initials from a name 
+    function getInitials(name) // Take a name as a parameter
+    {
+        // Split the name into an array of names
+        const names = name.split(' ');
+        // Create a variable to store the initials, and initialize it to an empty string
+        let initials = '';
+
+        // Then we use a for loop to iterate through the array of names
+        for (let i = 0; i < names.length; i++) 
+        {
+            // For each name in the array, we add the first letter of the name to the initials variable and we capitalize it
+            initials += names[i][0].toUpperCase();
+        }
+        // Finally, we return the initials
+        return initials;
+    }
+
+    // Check if the post author image exists
+    if (post.author.image) // If it exists
+    {
+        // Set the profile picture image to the post author image
+        profilePicImg.src = post.author.image; 
+    } 
+    else // If it does not exist
+    {
+        // Now, we need to handle the absence of a profile image
+
+        // We invoke the function to get the initials from the author's name
+        // And we store such variables in a variable
+        const initials = getInitials(post.author.name); 
+        
+        // Then, we creates a new <canvas> element using the document.createElement() method and assigns it to the canvas variable
+        // What is the <canvas> element? It is an HTML element that provides a drawing area for JavaScript
+        const canvas = document.createElement('canvas');
+
+        // We set the width and height of the canvas to 300px
+        // So, now, we have a square canvas element
+        canvas.width = 300;
+        canvas.height = 300;
+
+        // We get the 2D rendering context for the canvas
+        // The returned context object (context) of the method getContext() provides methods and properties to draw on the canvas element
+        const context = canvas.getContext('2d');
+
+        // fillStyle sets the fill color for drawing operations on the canvas
+        context.fillStyle = '#ccc'; // In this case, it sets the fill color to light gray
+
+        // fillRect() method draws a "filled" rectangle on the canvas using the color stated above
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        // The rectangle starts at coordinates (0, 0) and has a width and height equal to the canvas dimensions (canvas.width and canvas.height)
+        // This step effectively creates a solid colored background on the canvas.
+
+        // We set the font size and style
+        context.font = '150px Arial'; // Font size and style
+        context.textAlign = 'center'; // Aligns the text horizontally at the center
+        context.textBaseline = 'middle'; // Aligns the text vertically at the center
+        context.fillStyle = '#fff'; // Sets the text color to white 
+
+        // We draw the initials on the canvas using the fillText method
+        // The fillText() method draws filled text on the canvas using the color stated above (white)
+        // It takes the initials variable (containing the extracted initials from the post author's name) as the text to be drawn and specifies the position as (canvas.width / 2, canvas.height / 2), which represents the center of the canvas. The text is drawn with the previously set font and color.
+        context.fillText(initials, canvas.width / 2, canvas.height / 2);
+
+        // Convert the canvas to a data URL. The resulting data URL represents the canvas image as a base64-encoded string
+        //Finally, we set it as the source of the profile picture image
+        profilePicImg.src = canvas.toDataURL();
+    }
+
     // I'm setting the profile picture alt to the post author's name
     profilePicImg.alt = post.author.name;
 
