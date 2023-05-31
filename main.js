@@ -1,6 +1,3 @@
-// Milestone 2
-// If we click on the "Like" button, we change the color of the button text and increment the likes counter. We save the IDs of the posts we liked in a second array.
-
 // BONUS
 // Handle the absence of a profile image with a fallback element that contains the user's initials (e.g., Luca Formicola > LF).
 // When clicking on a "Like" button of a post, if we have already clicked, we should decrement the counter and change the color of the button.
@@ -229,7 +226,7 @@ posts.forEach((post) => {
     // Give the class "like-counter__counter" to the counter
     likesCounterDiv.classList.add('likes__counter');
     // Populate the likes counter div with the number of likes the post has received
-    likesCounterDiv.innerHTML = `Piace a <b id="like-counter-${post.id}" class="js-likes-counter">${post.likes}</b> persone`;
+    likesCounterDiv.innerHTML = `Piace a <b id="like-counter-${post.id}" class="likes-counter">${post.likes}</b> persone`;
 
     // Append the likes button and likes counter divs to the likes div
     likesDiv.appendChild(likesButtonDiv);
@@ -250,4 +247,64 @@ posts.forEach((post) => {
 
     // Append the whole post div to the container
     container.appendChild(postDiv);
+});
+
+// Milestone 2
+// If we click on the "Like" button, we change the color of the button text and increment the likes counter. We save the IDs of the posts we liked in a second array.
+// If we click on the "Like" button again, we change the color of the button text back to the original color and decrement the likes counter. We remove the ID of the post from the second array.
+
+// I need to select all the like buttons
+const likeButtons = document.querySelectorAll('.like-button');
+// I need to select all the like counters
+const likeCounters = document.querySelectorAll('.likes-counter');
+// I prepare an array in which we'll save the IDs of the posts we liked
+const likedPostsIds = [];
+
+// I need to add an event listener to the like counter 
+// I need to loop through all the like counters though, because we don't want to deal with Uncaught TypeError: likeButton.addEventListener is not a function
+// likeButton is not a single element, but a NodeList obtained from document.querySelectorAll('.like-button')
+
+// Iterate over each like button and add the event listener
+likeButtons.forEach((likeButton, index) => {
+    likeButton.addEventListener('click', function() {
+    // Change the color of the button text
+    this.classList.toggle('like-button--liked');
+
+    // Get the corresponding like counter for the clicked button
+    const likesCounter = likeCounters[index];
+
+    // Get the ID of the post from the parent element
+    const postId = parseInt(likesCounter.id.split('-')[2]);
+    // likesCounter refers to the variable that stores the reference to the likes counter element. .id is used to access the id attribute of that element
+    // The id attribute is in the format "like-counter-1", where 1 is the ID of the post we're dealing with
+    // We split the string into an array of sub-strings, using the "-" character as the separator
+    // This index access is used to retrieve the third element (index 2) from the array obtained after splitting the string. The array is zero-indexed, so the third element corresponds to index 2. If our id is "like-counter-1", by using the split method we obtain an array with three elements: "like", "counter", and "1". We want to access the third element, which is the ID of the post we're dealing with.
+    // We need to convert the ID from a string to a number, because the ID of the post is a number, while the ID of the post counter is a string. We do that using the parseInt method.
+
+    // Check if the post is already liked or not
+    if (likedPostsIds.includes(postId))  // If it's already liked 
+        {
+            // Decrement the likes counter and remove the post ID from the likedPostsIds array
+
+            // Store into a variable the current likes 
+            const currentLikes = parseInt(likesCounter.textContent);
+            // Decrement the likes counter by 1
+            likesCounter.textContent = currentLikes - 1;
+            // Get the index of the post ID in the likedPostsIds array
+            const index = likedPostsIds.indexOf(postId);
+            // Remove the post ID from the likedPostsIds array
+            likedPostsIds.splice(index, 1);
+        } 
+    else // If it's not liked yet
+        {
+            // Increment the likes counter and add the post ID to the likedPostsIds array
+
+            // Store into a variable the current likes
+            const currentLikes = parseInt(likesCounter.textContent);
+            // Increment the likes counter by 1
+            likesCounter.textContent = currentLikes + 1;
+            // Add the post ID to the likedPostsIds array
+            likedPostsIds.push(postId);
+        }
+    });
 });
