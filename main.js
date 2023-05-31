@@ -101,6 +101,55 @@ posts.forEach((post) => {
     // I give the class "post-meta__icon" to the div element
     postMetaIconDiv.classList.add('post-meta__icon');
 
+    // Create the profile picture
+    const profilePicImg = document.createElement('img');
+    // I give the class "profile-pic" to the img element
+    profilePicImg.classList.add('profile-pic');
+    // I'm setting the profile picture image to the post author image
+    // I check: 
+    // - If post.author.image === true (such as a string) --> post.author.image will be assigned to profilePicImg.src
+    // - If post.author.image === false (such as null or undefined) --> 'fallback-image-url' will be assigned to profilePicImg.src 
+    profilePicImg.src = post.author.image ? post.author.image : 'fallback-image-url';
+    // I'm setting the profile picture alt to the post author's name
+    profilePicImg.alt = post.author.name;
+
+    // Append the profile picture to the meta icon div
+    postMetaIconDiv.appendChild(profilePicImg);
+
+    // Create the post meta data div
+    const postMetaDataDiv = document.createElement('div');
+    // I give the class "post-meta__data" to the div element
+    postMetaDataDiv.classList.add('post-meta__data');
+
+    // Create the post meta author div
+    const postMetaAuthorDiv = document.createElement('div');
+    // I give the class "post-meta__author" to the div element
+    postMetaAuthorDiv.classList.add('post-meta__author');
+    // I need to populate the post author div with the author's name
+    postMetaAuthorDiv.textContent = post.author.name;
+
+    // Create the post meta date div
+    const postMetaDateDiv = document.createElement('div');
+    // I give the class "post-meta__date" to the div element
+    postMetaDateDiv.classList.add('post-meta__date');
+    // I need to populate the post date div with the post date
+    const createdDate = new Date(post.created);
+    // I need to make sure the date is formatted correctly (DD/MM/YYYY)
+    const formattedDate = createdDate.toLocaleDateString('it-IT');
+    // I need to populate the date div with the created date
+    postMetaDateDiv.textContent = formattedDate;
+
+    // I need to append the post meta author and date divs to the post meta data div 
+    postMetaDataDiv.appendChild(postMetaAuthorDiv); 
+    postMetaDataDiv.appendChild(postMetaDateDiv);
+
+    // I need to append the post meta icon and data divs to the post meta div
+    postMetaDiv.appendChild(postMetaIconDiv); 
+    postMetaDiv.appendChild(postMetaDataDiv); 
+
+    // Append the meta div to the post header div
+    postHeaderDiv.appendChild(postMetaDiv);
+
     
 
 });
