@@ -2,7 +2,6 @@
 // If we click on the "Like" button, we change the color of the button text and increment the likes counter. We save the IDs of the posts we liked in a second array.
 
 // BONUS
-// Format the dates in Italian format (dd/mm/yyyy).
 // Handle the absence of a profile image with a fallback element that contains the user's initials (e.g., Luca Formicola > LF).
 // When clicking on a "Like" button of a post, if we have already clicked, we should decrement the counter and change the color of the button.
 
