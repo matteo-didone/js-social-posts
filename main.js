@@ -345,6 +345,9 @@ likeButtons.forEach((likeButton, index) => {
     // Get the corresponding like counter for the clicked button
     const likesCounter = likeCounters[index];
 
+    // This prevents the default behavior of the link button
+    event.preventDefault();
+
     // Get the ID of the post from the parent element
     const postId = parseInt(likesCounter.id.split('-')[2]);
     // likesCounter refers to the variable that stores the reference to the likes counter element. .id is used to access the id attribute of that element
